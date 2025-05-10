@@ -1,14 +1,29 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-class Teacher(models.Model):
+class TeacherManager(BaseUserManager):
+    def create_user(self, phone, password=None, **extra_fields):
+        if not phone:
+            raise ValueError("Phone number is required")
+        extra_fields.setdefault('is_active', True)
+        user = self.model(phone=phone, **extra_fields)
+        user.set_password(password or self.make_random_password())
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, phone, password=None, **extra_fields):
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
+        return self.create_user(phone, password, **extra_fields)
+
+
+class Teacher(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = (
         (0, 'Unknown'),
         (1, 'Male'),
         (2, 'Female'),
     )
-
     EDUCATION_LEVEL_CHOICES = (
         (0, 'Unknown'),
         (1, 'Bachelor'),
@@ -16,9 +31,7 @@ class Teacher(models.Model):
         (3, 'PhD'),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    phone = models.CharField(max_length=20, unique=True, default='', verbose_name='Phone Number')
+    phone = models.CharField(max_length=20, unique=True, verbose_name='Phone Number')
     name = models.CharField(max_length=50, default='', verbose_name='Full Name')
     nickname = models.CharField(max_length=50, default='', verbose_name='Nickname')
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, default=0, verbose_name='Gender')
@@ -35,10 +48,16 @@ class Teacher(models.Model):
     success_cases = models.TextField(null=True, blank=True, verbose_name='Success Cases')
     teaching_achievements = models.TextField(null=True, blank=True, verbose_name='Teaching Achievements')
     evaluation = models.DecimalField(max_digits=4, decimal_places=1, default=0.0, verbose_name='Rating')
-    is_active = models.BooleanField(default=False, verbose_name='Is Active')
+    is_active = models.BooleanField(default=True, verbose_name='Is Active')
+    is_staff = models.BooleanField(default=False, verbose_name='Is Staff')
     is_recommend = models.BooleanField(default=False, verbose_name='Is Recommended')
     updated_at = models.IntegerField(default=0, verbose_name='Updated Timestamp')
     created_at = models.IntegerField(default=0, verbose_name='Created Timestamp')
+
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = []
+
+    objects = TeacherManager()
 
     class Meta:
         db_table = 'teachers'
