@@ -1,5 +1,4 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
 from api.utils import response
 from api.models.teacher import Teacher
 import logging
@@ -8,8 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class UserDetailView(APIView):
-    permission_classes = [AllowAny]
-
     # noinspection PyMethodMayBeStatic
     def post(self, request):
         try:
