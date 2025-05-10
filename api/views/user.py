@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class UserDetailView(APIView):
+class ProfileView(APIView):
     # noinspection PyMethodMayBeStatic
     def post(self, request):
         try:
