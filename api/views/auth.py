@@ -1,6 +1,4 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.contrib.auth import get_user_model
 from api.serializers.auth import SendCodeSerializer, LoginWithCodeSerializer
 from api.utils.sms import generate_code
 from api.models.sms_verfication import SMSVerification
