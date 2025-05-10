@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Django specific
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# VS Code
+.vscode/
+
+# Environment
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# MacOS
+.DS_Store
+
+# Pytest / Coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Migrations (optional - keep only if not tracking initial migrations)
+# polls/migrations/
+
+# Git
+*.swp
+*.swo
